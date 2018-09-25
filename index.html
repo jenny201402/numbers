@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>模拟的键盘</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+
+<script src="js/jquery.min.js"></script>
+
+<style type="text/css">
+* {
+	margin: 0;
+	padding: 0;
+}
+.test{
+	width:218px;
+	height:40px;
+	border:solid 1px rgb(217,217,217);
+}
+input{
+	border:none;
+}
+#t-value {
+	width: 200px;
+	height: 50px;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	float: left;
+	border-bottom: 0px;
+	line-height: 50px;
+	text-indent: 15px;
+}
+
+#t-del {
+	float: left;
+	border: 1px solid #ccc;
+	width: 100px;
+	height: 50px;
+	box-sizing: border-box;
+	text-align: center;
+	line-height: 50px;
+	font-weight: bold;
+	border-bottom: 0px;
+	border-left: 0px;
+}
+
+table#t-keyvalue {
+	clear: both;
+}
+
+table#t-keyvalue tr td {
+	border: 1px solid #ccc;
+	border-bottom: 0px;
+	border-left: 0px;
+	width: 100px;
+	height: 50px;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+table#t-keyvalue tr td:first-child {
+	border-left: 1px solid #ccc;
+}
+
+#t-submit {
+	border: 1px solid #ccc;
+	width: 200px;
+	text-align: center;
+	height: 50px;
+	line-height: 50px;
+	box-sizing: border-box;
+	font-weight: bold;
+	float: left;
+}
+
+#t-close {
+	width: 100px;
+	height: 50px;
+	box-sizing: border-box;
+	float: left;
+	border: 1px solid #ccc;
+	border-left: 0px;
+	text-align: center;
+	line-height: 50px;
+	font-weight: bold;
+}
+
+#t-keybord {
+	position: absolute;
+	top: 200px;
+	left: 200px;
+	display: none;
+	z-index: 100px;
+	background-color: #fff;
+	width: 300px;
+}
+img{
+	float:right;
+	margin-top:3px;
+}
+.t-keybord {
+	text-indent: 10px;
+	height: 38px;
+	line-height: 38px;
+	width: 180px;
+	/*border: 1px solid #ccc;*/
+	border:none;
+}
+</style>
+</head>
+
+<body>
+<h3>点击输入框</h3>
+<div class="test">
+<label for=""><img src="img/01.png" alt="" class="ims">
+	<input type="text" readonly name="" class="t-keybord">
+</label>
+</div>
+
+<div id="t-keybord">
+	<div id="t-value"></div>
+	<div id="t-del">del</div>
+	<table id="t-keyvalue" class="keyboard" cellspacing="0" cellpadding="0">
+		<tr>
+			<td>1</td>
+			<td>2</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>5</td>
+			<td>6</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>8</td>
+			<td>9</td>
+		</tr>
+		<tr>
+			<td>+</td>
+			<td>0</td>
+			<td>.</td>
+		</tr>
+	</table>
+	<div id="t-submit" class="t-button">确定</div>
+	<div id="t-close" class="t-button">关闭</div>
+</div>
+</body>
+<script type="text/javascript">
+var clicker;
+$(".t-keybord").mousedown(function(event) {
+clicker = $(this);
+var values = clicker.val();
+var wh = $(window).height();
+var ww = $(window).width();
+var kh = $("#t-keybord").height();
+var kw = $("#t-keybord").width();
+var t = clicker.offset().top + clicker.outerHeight() + 5;
+var l = clicker.offset().left;
+if ((t + kh) > wh) {
+	t = clicker.offset().top - kh - 5;
+}
+if (l + kw > ww) {
+	l = clicker.offset().left - kw + clicker.width();
+}
+$("#t-keybord").css({ top: t, left: l });
+$("#t-value").html(values);
+$("#t-keybord").fadeIn('fast');
+});
+
+//确认
+$("#t-submit").click(function(event) {
+clicker.val($("#t-value").html());
+$("#t-keybord").fadeOut('fast');
+});
+
+//关闭
+$("#t-close").click(function(event) {
+$("#t-keybord").fadeOut('fast');
+});
+
+//当点击数字键时
+$("#t-keyvalue tr td").bind({
+mousedown: function() {
+	var val = $("#t-value").html();
+	val += $(this).html();
+	$("#t-value").html(val);
+	$(this).css({
+		"background-color": '#b0b0b0'
+	});
+},
+mouseup: function() {
+	$(this).css({
+		"background-color": '#ffffff'
+	});
+},
+mouseover: function() {
+	$(this).css({
+		"background-color": '#cccccc'
+	});
+},
+mouseout: function(){
+	$(this).css({
+		"background-color": '#ffffff'
+	});
+}
+});
+
+//点击del
+$("#t-del").click(function() {
+var val = $("#t-value").html();
+if (val.length > 0) {
+	val = val.substring(0, val.length - 1);
+}
+$("#t-value").html(val);
+});
+$(function(){
+$("#t-keybord").draggable({ handle: "#t-value" });
+})
+</script>
+
+</html>
